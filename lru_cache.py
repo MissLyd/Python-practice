@@ -14,10 +14,8 @@
 
 class Node:
     def __init__(self,key,value):
-        self.key = key
-        self.value = value
-        self.prev = None
-        self.next = None
+        self.key,self.value = key,value
+        self.prev = self.next= None
 
 class LRUCache:
       
@@ -33,38 +31,14 @@ class LRUCache:
 
     def remove(self,node):
 
-        curr = node # Storing it in a variable for easy deleting later
-
-        if curr == self.head : 
-            self.head = curr.next # Giving the head the value of the node after our current one
-            if self.head is not None: # If the list isn't empty now that we deleted the current node
-                self.head.prev = None # Set the new head with None as its prev
-            del curr
-        
-        elif curr == self.tail:
-            self.tail = curr.prev  # Giving the tail the value of the node before our current one
-            if self.tail is not None: # If the list isn't empty now that we deleted the current node
-                self.tail.next = None # Set the new tail with None as its next
-            del curr
-
-        else:
-            if curr.prev is not None: # Safety check not to call next on None
-                curr.prev.next = curr.next
-            if curr.next is not None: # Safety check not to call prev on None
-                curr.next.prev = curr.prev
-            del curr
-
-        return node
+        prev,next=node.prev,node.next
+        prev.next,next.prev=next,prev
         
         
     def insert(self,node): # null--2--3--null / Null--1--2
 
-        node.next = self.head # Linking our node's next to the head
-        node.prev = None # Linking our node's prev to None
-        if self.head is not None: # if the list is not empty
-            self.head.prev = node # Linking the head's prev to our node
-        self.head = node # Updating the self.head variable
-        return node 
+        prev,next=self.tail.prev,self.tail
+        node.prev,node.next=prev,next
         
     def get(self, key):
         # if key not found, return -1
@@ -80,27 +54,17 @@ class LRUCache:
 
     def put(self, key, value):
         if key in self.cache:
-            node=self.cache[key]
-            node.value=value
             # Same logic, you just used your key, so it is most recently used
             # Move it at the end of your order list
-            self.remove(node)
-            self.insert(node)
-            
-        else:
-            # if cache reaches full capacity
-            if len(self.cache) >= self.cap:
-                # pop the first item of the list
-                discard = self.head
-                self.remove(discard)
-                # delete it from the cache
-                del self.cache[discard.key]
+            self.remove(self.cache[key].value)
+        self.cache[key]=Node(key,value)
+        self.insert(self.cache[key])
+        
+        #If cache reaches full capacity
+        if len(self.cache) >= self.cap:
+            # pop the first item of the list
+            LRU = self.head
+            self.remove(LRU)
+            # delete it from the cache
+            del self.cache[LRU.key]
 
-            new_node=Node(key,value)
-            self.insert(new_node)
-            self.cache[key]=new_node
-
-while True:
-    cap = int(input("Enter your cache capacity(positive and <10**3): "))
-    if cap<0 or cap>10**3:
-        gh
