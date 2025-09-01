@@ -10,7 +10,7 @@ class Solution:
                 # prints first character on the row
                 solution+=s[i]
                 # If the row is in the middle, prints other character on the row BEFORE the ones in the incrementation
-                if (row>0 and row <numRows-1 and (numRows-1)*2-2*row<len(s)):
+                if (row>0 and row <numRows-1 and (i+(numRows-1)*2-2*row)<len(s)):
                     solution+=s[i+(numRows-1)*2-2*row]
 
         return solution
@@ -18,4 +18,5 @@ class Solution:
 s="PAYPALISHIRING"
 numRows=3
 solution=Solution()
+
 print(solution.convert(s,numRows))
